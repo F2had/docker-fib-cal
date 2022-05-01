@@ -10,7 +10,7 @@ const redis = await connect({
   retryInterval: 1000,
 });
 
-const redisSub = await redis.subscribe();
+const redisSub = await redis.subscribe("insert");
 
 const fibonacci = (n: number): number => {
   if (n <= 1) return n;
@@ -34,7 +34,7 @@ const fibonacciWorker = async (n: number): Promise<number> => {
 };
 
 (async () => {
-  for await (const { channel, message } of redisSub.receive()) {
+  for await (const { message } of redisSub.receive()) {
     const n = parseInt(message);
     fibonacciWorker(n);
   }
